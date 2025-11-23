@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Поиск по Lalalo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="header-card">
+      <div class="header-inner">
+        <div class="header-top">
+          <div class="title-block">
+            <h1>Поиск по Lalafo с эмбеддингом</h1>
+            <p>Пишешь запрос - бэк скрепит Lalafo, сохранит в базу и найдёт самые подходящие объявления</p>
+          </div>
+          <div class="badge">
+            <div class="badge-dot"></div>
+            <span>FastAPI · SQLAlchemy · Embeddings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-card">
+      <div id="search-form">
+        <div class="search-row">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input
+              id="query-input"
+              class="search-input"
+              type="text"
+              placeholder="Например: iphone 13 Бишкек или дешёвый honor"
+              autocomplete="off"
+            >
+            <button id="clear-btn" class="clear-icon" type="button">✕</button>
+          </div>
+
+          <label class="mode-switch">
+            <input id="semantic-toggle" type="checkbox" checked>
+            <span>Умный поиск по смыслу</span>
+          </label>
+
+          <button id="search-btn" class="btn-primary" type="button">
+            <span class="btn-dot"></span>
+            <span>Искать</span>
+          </button>
+        </div>
+      </div>
+
+
+      <div class="search-meta">
+        <div class="meta-left">
+          <div class="meta-pill">
+            <span class="meta-dot"></span>
+            <span>База пополняется при каждом запросе</span>
+          </div>
+          <div class="meta-pill">
+            <span class="meta-dot"></span>
+            <span id="meta-count">Результатов: 0</span>
+          </div>
+        </div>
+        <div class="meta-right" id="meta-mode">
+          Режим: семантический поиск
+        </div>
+      </div>
+
+      <div class="status" id="status-line"></div>
+    </div>
+
+    <div id="results-section" class="results-card hidden">
+      <div class="results-header">
+        <div class="results-title">
+          Ответ по запросу: <span id="results-query"></span>
+        </div>
+        <div class="results-count" id="results-count"></div>
+      </div>
+
+      <div id="results-grid" class="results-grid"></div>
+
+      <div id="empty-state" class="empty-state hidden">
+        Ничего не нашлось. Попробуй переформулировать запрос.
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html> 

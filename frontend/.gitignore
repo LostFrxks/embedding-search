@@ -1,0 +1,16 @@
+# venv
+venv/
+.env
+
+# python cache
+__pycache__/
+*.pyc
+
+# sqlite
+app.db
+
+# VSCode
+.vscode/
+
+# прочий мусор
+*.log
