@@ -3,11 +3,10 @@ from sqlalchemy.orm import sessionmaker, declarative_base, session
 
 
 
-DATABASE_URL = "sqlite:///./app.db"
+DATABASE_URL = "postgresql+psycopg2://postgres:root@localhost:5432/mbank_lalafo"
 
 engine = create_engine(
     DATABASE_URL, 
-    connect_args={"check_same_thread": False}
 )
 
 SessionLocal = sessionmaker(
@@ -24,3 +23,9 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def init_db():
+    from . import models  
+
+    Base.metadata.create_all(bind=engine)

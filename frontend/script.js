@@ -12,6 +12,7 @@ const resultsQuery = document.getElementById("results-query")
 const resultsCount = document.getElementById("results-count")
 const resultsGrid = document.getElementById("results-grid")
 const emptyState = document.getElementById("empty-state")
+const refreshBtn = document.getElementById("refresh-btn")
 
 console.log("frontend loaded")
 console.log("form =", form)
@@ -75,11 +76,13 @@ function renderResults(query, items) {
     chipDot.className = "ad-chip-dot"
     chip.appendChild(chipDot)
     const chipText = document.createElement("span")
-    if (typeof item.score === "number") {
-      chipText.textContent = "score " + item.score.toFixed(3)
+
+    if (typeof item.final_score === "number") {
+      chipText.textContent = "score " + item.final_score.toFixed(3)
     } else {
       chipText.textContent = "локальный поиск"
     }
+
     chip.appendChild(chipText)
 
     const titleEl = document.createElement("div")
@@ -133,18 +136,6 @@ async function runSearch(mode, query) {
       ? "Режим: семантический поиск"
       : "Режим: локальный поиск по title"
 
-  setStatus("Обновляем базу с Lalafo", "loading")
-
-  try {
-    const searchUrl = apiBase + "/search?q=" + encodeURIComponent(query)
-    const searchRes = await fetch(searchUrl)
-    if (!searchRes.ok) {
-      console.warn("Ошибка /search:", searchRes.status)
-    }
-  } catch (e) {
-    console.warn("Сетевая ошибка /search:", e)
-  }
-
   setStatus("Строим выдачу по базе", "loading")
 
   let dataUrl
@@ -192,6 +183,36 @@ async function handleSearch() {
   }
 }
 
+async function handleRefresh() {
+  refreshBtn.disabled = true
+  setStatus("Добавляем карточки из Lalafo...", "loading")
+
+  try {
+    const res = await fetch(
+      apiBase + "/ads/refresh_lalafo?limit=500",
+      { method: "POST" }
+    )
+
+    if (!res.ok) {
+      setStatus("Не удалось обновить базу: " + res.status, "error")
+      return
+    }
+
+    const data = await res.json()
+    const created = data.created ?? 0
+    const updated = data.updated_embeddings ?? 0
+
+    setStatus(
+      "Добавили " + created + " новых объявлений",
+    )
+  } catch (e) {
+    console.error("refresh error", e)
+    setStatus("Ошибка обновления базы: " + (e.message || e), "error")
+  } finally {
+    refreshBtn.disabled = false
+  }
+}
+
 searchBtn.addEventListener("click", e => {
   e.preventDefault()
   handleSearch()
@@ -223,4 +244,9 @@ semanticToggle.addEventListener("change", () => {
     ? "семантический поиск"
     : "локальный поиск по title"
   metaMode.textContent = "Режим: " + mode
+})
+
+refreshBtn.addEventListener("click", e => {
+  e.preventDefault()
+  handleRefresh()
 })
